@@ -4,10 +4,9 @@ public class Task {
     private int id;
     private String status;
 
-    Task (){
+    Task() {
         this.id = Manager.assignId();
         status = "NEW";
-        System.out.println(id);
     }
 
     @Override
@@ -24,20 +23,29 @@ public class Task {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
-        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")){
+        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) {
             this.status = status;
         }
 

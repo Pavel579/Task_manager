@@ -37,8 +37,8 @@ public class Manager {
     }
 
     public void updateTask(int id, Task updatedTask) {
-        for (int i=0; i<taskList.size(); i++){
-            if (taskList.get(i).getId() == id){
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).getId() == id) {
                 taskList.set(i, updatedTask);
             }
         }
@@ -46,15 +46,15 @@ public class Manager {
     }
 
     public void removeTaskById(int id) {
-        for (int i=0; i<taskList.size(); i++){
-            if (taskList.get(i).getId() == id){
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).getId() == id) {
                 taskList.remove(i);
                 break;
             }
         }
 
-    }
 
+    }
 
 
     public ArrayList<Subtask> getSubtaskList() {
@@ -62,6 +62,9 @@ public class Manager {
     }
 
     public void removeAllSubtasks() {
+        for (Epic epic : epicList) {
+            epic.getEpicSubtasksList().clear();
+        }
         subtaskList.clear();
     }
 
@@ -69,7 +72,7 @@ public class Manager {
         subtaskList.add(subtask);
     }
 
-    public Task getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) {
         for (Subtask subtask : subtaskList) {
             if (subtask.getId() == id) {
                 return subtask;
@@ -79,24 +82,46 @@ public class Manager {
     }
 
     public void updateSubtask(int id, Subtask updatedSubtask) {
-        for (int i=0; i<subtaskList.size(); i++){
-            if (subtaskList.get(i).getId() == id){
+        for (int i = 0; i < subtaskList.size(); i++) {
+            if (subtaskList.get(i).getId() == id) {
                 subtaskList.set(i, updatedSubtask);
+            }
+        }
+        for (int i = 0; i < epicList.size(); i++) {
+            if (epicList.get(i).getId() == updatedSubtask.getEpicId()) {
+                for (int j = 0; j < epicList.get(i).getEpicSubtasksList().size(); j++) {
+                    if (epicList.get(i).getEpicSubtasksList().get(j).getId() == id) {
+                        epicList.get(i).getEpicSubtasksList().set(j, updatedSubtask);
+                        epicList.get(i).checkEpicStatus();
+                    }
+                }
             }
         }
 
     }
 
     public void removeSubtaskById(int id) {
-        for (int i=0; i<subtaskList.size(); i++){
-            if (subtaskList.get(i).getId() == id){
+        Subtask subtask = null;
+        for (int i = 0; i < subtaskList.size(); i++) {
+            if (subtaskList.get(i).getId() == id) {
+                subtask = subtaskList.get(i);
                 subtaskList.remove(i);
                 break;
             }
         }
+        for (int i = 0; i < epicList.size(); i++) {
+            if (epicList.get(i).getId() == subtask.getEpicId()) {
+                for (int j = 0; j < epicList.get(i).getEpicSubtasksList().size(); j++) {
+                    if (epicList.get(i).getEpicSubtasksList().get(j).getId() == id) {
+                        epicList.get(i).getEpicSubtasksList().remove(j);
+                        epicList.get(i).checkEpicStatus();
+                    }
+                }
+            }
+        }
+
 
     }
-
 
 
     public ArrayList<Epic> getEpicList() {
@@ -121,8 +146,8 @@ public class Manager {
     }
 
     public void updateEpic(int id, Epic updatedEpic) {
-        for (int i=0; i<epicList.size(); i++){
-            if (epicList.get(i).getId() == id){
+        for (int i = 0; i < epicList.size(); i++) {
+            if (epicList.get(i).getId() == id) {
                 epicList.set(i, updatedEpic);
             }
         }
@@ -130,8 +155,8 @@ public class Manager {
     }
 
     public void removeEpicById(int id) {
-        for (int i=0; i<epicList.size(); i++){
-            if (epicList.get(i).getId() == id){
+        for (int i = 0; i < epicList.size(); i++) {
+            if (epicList.get(i).getId() == id) {
                 epicList.remove(i);
                 break;
             }
@@ -139,9 +164,15 @@ public class Manager {
 
     }
 
+    //Метод добавляет подзадачу в эпик
+    public void addSubtask(Epic epic, Subtask subtask) {
+        epic.getEpicSubtasksList().add(subtask);
+        subtask.setEpicId(epic.getId());
+        epic.checkEpicStatus();
+    }
 
 
-    public ArrayList<Task> getSubtasksListOfEpic(Epic epic){
+    public ArrayList<Task> getSubtasksListOfEpic(Epic epic) {
         return epic.getEpicSubtasksList();
     }
 

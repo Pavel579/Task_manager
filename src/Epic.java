@@ -2,18 +2,24 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<Task> epicSubtasksList = new ArrayList<>();
+    private String epicStatus;
 
     Epic() {
-        this.setStatus("NEW");
+        epicStatus = "DONE";
     }
 
     @Override
     public void setStatus(String status) {
-        super.setStatus(status);
+
     }
 
+    private void setEpicStatus(String status) {
+        epicStatus = status;
+    }
+
+    @Override
     public String getStatus() {
-        return super.getStatus();
+        return this.epicStatus;
     }
 
     @Override
@@ -23,46 +29,31 @@ public class Epic extends Task {
                 '}';
     }
 
-    //Метод добавляет подзадачу в эпик
-    public void addSubtask(Subtask subtask) {
-        epicSubtasksList.add(subtask);
-        checkEpicStatus();
-    }
-
-    //Метод заменяет подзадачу обновленной
-    public void setSubtask(Task subtask){
-        for (int i=0; i<epicSubtasksList.size(); i++){
-            if (epicSubtasksList.get(i).getId() == subtask.getId()){
-                epicSubtasksList.set(i, subtask);
-            }
-        }
-        checkEpicStatus();
-    }
-
-    //Метод вычисляет статус эпика
-    private void checkEpicStatus(){
-        int valueNew=0;
-        int valueInProgress = 0;
-        int valueDone = 0;
-        for (Task epicSubtask : epicSubtasksList){
-            if (epicSubtask.getStatus().equals("NEW")){
-                valueNew++;
-            }else if (epicSubtask.getStatus().equals("IN_PROGRESS")){
-                valueInProgress++;
-            }else if (epicSubtask.getStatus().equals("DONE")){
-                valueDone++;
-            }
-        }
-        if (valueNew == epicSubtasksList.size() || epicSubtasksList.size()==0){
-            this.setStatus("NEW");
-        }else if (valueDone == epicSubtasksList.size()){
-            this.setStatus("DONE");
-        }else {
-            this.setStatus("IN_PROGRESS");
-        }
-    }
 
     public ArrayList<Task> getEpicSubtasksList() {
         return epicSubtasksList;
+    }
+
+    //Метод вычисляет статус эпика
+    public void checkEpicStatus() {
+        int valueNew = 0;
+        int valueInProgress = 0;
+        int valueDone = 0;
+        for (Task epicSubtask : getEpicSubtasksList()) {
+            if (epicSubtask.getStatus().equals("NEW")) {
+                valueNew++;
+            } else if (epicSubtask.getStatus().equals("IN_PROGRESS")) {
+                valueInProgress++;
+            } else if (epicSubtask.getStatus().equals("DONE")) {
+                valueDone++;
+            }
+        }
+        if (valueNew == getEpicSubtasksList().size() || getEpicSubtasksList().size() == 0) {
+            setEpicStatus("NEW");
+        } else if (valueDone == getEpicSubtasksList().size()) {
+            setEpicStatus("DONE");
+        } else {
+            setEpicStatus("IN_PROGRESS");
+        }
     }
 }

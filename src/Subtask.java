@@ -1,22 +1,22 @@
-public class Subtask extends Task{
+public class Subtask extends Task {
+    private int epicId;
 
-    Subtask(){
+    Subtask() {
         this.setStatus("NEW");
     }
 
-    @Override
-    public void setName(String name) {
-        super.setName(name);
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
+
+    public int getEpicId() {
+        return epicId;
+    }
+
 
     @Override
     public int getId() {
         return super.getId();
-    }
-
-    @Override
-    public void setId(int id) {
-        super.setId(id);
     }
 
     @Override
