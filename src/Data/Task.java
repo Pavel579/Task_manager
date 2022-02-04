@@ -1,10 +1,14 @@
+package Data;
+
+import Logic.Manager;
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private String status;
 
-    Task() {
+    public Task() {
         this.id = Manager.assignId();
         status = "NEW";
     }
@@ -48,7 +52,6 @@ public class Task {
         if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) {
             this.status = status;
         }
-
     }
 
 

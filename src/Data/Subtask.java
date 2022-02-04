@@ -1,8 +1,22 @@
+package Data;
+
 public class Subtask extends Task {
     private int epicId;
 
-    Subtask() {
-        this.setStatus("NEW");
+    public Subtask(String name, String description, int epicId) {
+        setStatus("NEW");
+        setName(name);
+        setDescription(description);
+        this.epicId = epicId;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "epicId=" + epicId +
+                " Status=" + getStatus() +
+                '}';
     }
 
     public void setEpicId(int epicId) {
@@ -10,7 +24,7 @@ public class Subtask extends Task {
     }
 
     public int getEpicId() {
-        return epicId;
+        return this.epicId;
     }
 
 
