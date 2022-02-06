@@ -1,5 +1,5 @@
-import Logic.Manager;
-import Data.*;
+import logic.Manager;
+import data.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -53,7 +53,7 @@ public class Main {
         System.out.println(manager.getEpicList());
 
         //Удаляем подзадачу и проверяем статус эпика
-        manager.removeSubtaskById(3);
+        //manager.removeSubtaskById(3);
         System.out.println(manager.getEpicList());
         System.out.println(manager.getSubtaskList());
 

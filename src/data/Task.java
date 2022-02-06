@@ -1,6 +1,6 @@
-package Data;
+package data;
 
-import Logic.Manager;
+import logic.Manager;
 
 public class Task {
     private String name;
