@@ -1,5 +1,6 @@
 package data;
 
+import utils.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,11 +9,11 @@ public class Epic extends Task {
 
 
     public Epic() {
-        super.setStatus("NEW");
+        super.setStatus(TaskStatus.NEW);
     }
 
     @Override
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
 
     }
 
@@ -25,7 +26,7 @@ public class Epic extends Task {
     }
 
     @Override
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return super.getStatus();
     }
 
@@ -43,18 +44,18 @@ public class Epic extends Task {
         int valueNew = 0;
         int valueDone = 0;
         for (Integer subtaskId : subtaskIdInEpic) {
-            if (subtaskList.get(subtaskId).getStatus().equals("NEW")) {
+            if (subtaskList.get(subtaskId).getStatus().equals(TaskStatus.NEW)) {
                 valueNew++;
-            } else if (subtaskList.get(subtaskId).getStatus().equals("DONE")) {
+            } else if (subtaskList.get(subtaskId).getStatus().equals(TaskStatus.DONE)) {
                 valueDone++;
             }
         }
         if (valueNew == subtaskIdInEpic.size() || subtaskIdInEpic.size() == 0) {
-            super.setStatus("NEW");
+            super.setStatus(TaskStatus.NEW);
         } else if (valueDone == subtaskIdInEpic.size()) {
-            super.setStatus("DONE");
+            super.setStatus(TaskStatus.DONE);
         } else {
-            super.setStatus("IN_PROGRESS");
+            super.setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 

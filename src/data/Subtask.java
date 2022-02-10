@@ -1,10 +1,12 @@
 package data;
 
+import utils.TaskStatus;
+
 public class Subtask extends Task {
     private int epicId;
 
     public Subtask(String name, String description, int epicId) {
-        setStatus("NEW");
+        setStatus(TaskStatus.NEW);
         setName(name);
         setDescription(description);
         this.epicId = epicId;
@@ -34,12 +36,12 @@ public class Subtask extends Task {
     }
 
     @Override
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return super.getStatus();
     }
 
     @Override
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         super.setStatus(status);
     }
 

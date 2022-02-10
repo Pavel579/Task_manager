@@ -1,16 +1,18 @@
 package data;
 
-import logic.Manager;
+import logic.InMemoryTaskManager;
+import utils.TaskStatus;
 
 public class Task {
     private String name;
     private String description;
     private int id;
-    private String status;
+    private TaskStatus status;
 
     public Task() {
-        this.id = Manager.assignId();
-        status = "NEW";
+        this.id = InMemoryTaskManager.assignId();
+        status = TaskStatus.NEW;
+        System.out.println(id);
     }
 
     @Override
@@ -44,12 +46,12 @@ public class Task {
     }
 
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) {
+    public void setStatus(TaskStatus status) {
+        if (status.equals(TaskStatus.NEW) || status.equals(TaskStatus.IN_PROGRESS) || status.equals(TaskStatus.DONE)) {
             this.status = status;
         }
     }

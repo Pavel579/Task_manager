@@ -1,52 +1,61 @@
 package logic;
 
 import java.util.*;
-
 import data.*;
 
-public class Manager {
+public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskManager {
     private static int id = 0;
 
     private HashMap<Integer, Task> taskList = new HashMap<>();
     private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     private HashMap<Integer, Epic> epicList = new HashMap<>();
 
+
     //Метод возвращает список задач Task
+    @Override
     public ArrayList<Task> getTaskList() {
         return new ArrayList<>(taskList.values());
     }
 
     //Метод удаляет все задачи Task
+    @Override
     public void removeAllTasks() {
         taskList.clear();
     }
 
     //Метод создает задачу Task
+    @Override
     public void createTask(Task task) {
         taskList.put(task.getId(), task);
     }
 
     //Метод возвращает задачу Task по ее идентификатору
+    @Override
     public Task getTaskById(int id) {
+        add(taskList.get(id));
         return taskList.get(id);
     }
 
     //Метод обновляет задачу Task
+    @Override
     public void updateTask(Task updatedTask) {
         taskList.replace(updatedTask.getId(), updatedTask);
     }
 
     //Метод удаляет задачу Task по ее идентификатору
+    @Override
     public void removeTaskById(int id) {
         taskList.remove(id);
     }
 
     //Метод возвращает список задач Subtask
+    @Override
     public ArrayList<Subtask> getSubtaskList() {
         return new ArrayList<>(subtaskList.values());
     }
 
     //Метод удаляет все задачи Subtask
+    @Override
     public void removeAllSubtasks() {
         subtaskList.clear();
         for (Epic epic : epicList.values()) {
@@ -56,6 +65,7 @@ public class Manager {
     }
 
     //Метод создает задачу Subtask
+    @Override
     public void createSubtask(Subtask subtask) {
         subtaskList.put(subtask.getId(), subtask);
         Epic epic = epicList.get(subtask.getEpicId());
@@ -64,11 +74,14 @@ public class Manager {
     }
 
     //Метод возвращает задачу Subtask по ее идентификатору
+    @Override
     public Subtask getSubtaskById(int id) {
+        add(subtaskList.get(id));
         return subtaskList.get(id);
     }
 
     //Метод обновляет задачу Subtask
+    @Override
     public void updateSubtask(Subtask updatedSubtask) {
         subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
         Epic epic = epicList.get(updatedSubtask.getEpicId());
@@ -77,6 +90,7 @@ public class Manager {
     }
 
     //Метод удаляет задачу Subtask по ее идентификатору
+    @Override
     public void removeSubtaskById(int id) {
         subtaskList.remove(id);
         for (Epic epic : epicList.values()) {
@@ -92,32 +106,39 @@ public class Manager {
     }
 
     //Метод возвращает список задач Epic
+    @Override
     public ArrayList<Epic> getEpicList() {
         return new ArrayList<>(epicList.values());
     }
 
     //Метод удаляет все задачи Epic
+    @Override
     public void removeAllEpic() {
         epicList.clear();
         subtaskList.clear();
     }
 
     //Метод создает задачу Epic
+    @Override
     public void createEpic(Epic epic) {
         epicList.put(epic.getId(), epic);
     }
 
     //Метод возвращает задачу Epic по ее идентификатору
+    @Override
     public Task getEpicById(int id) {
+        add(epicList.get(id));
         return epicList.get(id);
     }
 
     //Метод обновляет задачу Epic
+    @Override
     public void updateEpic(Epic updatedEpic) {
         epicList.replace(updatedEpic.getId(), updatedEpic);
     }
 
     //Метод удаляет задачу Epic по ее идентификатору
+    @Override
     public void removeEpicById(int id) {
         epicList.remove(id);
 

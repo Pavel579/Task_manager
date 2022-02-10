@@ -1,11 +1,12 @@
-import logic.Manager;
+import logic.InMemoryTaskManager;
 import data.*;
+import utils.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
 
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         //Создаем 2 эпика
         Epic epic1 = new Epic();
@@ -34,6 +35,22 @@ public class Main {
         manager.createSubtask(subtask2);
         manager.createSubtask(subtask3);
 
+        manager.getEpicById(1);
+        manager.getEpicById(2);
+        System.out.println("history   " + manager.getHistory());
+        manager.getSubtaskById(4);
+        manager.getSubtaskById(3);
+        System.out.println("history   " + manager.getHistory());
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        manager.getTaskById(6);
+        System.out.println("history   " + manager.getHistory());
+
+
 
         //выводим списки задач, подзадач и эпиков
         System.out.println(manager.getEpicList());
@@ -42,14 +59,14 @@ public class Main {
         System.out.println();
 
         //Меняем статус подзадач
-        subtask1.setStatus("NEW");
-        subtask2.setStatus("DONE");
+        subtask1.setStatus(TaskStatus.NEW);
+        subtask2.setStatus(TaskStatus.DONE);
         System.out.println(manager.getSubtaskList());
 
 
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
-        epic1.setStatus("NEW");
+        epic1.setStatus(TaskStatus.NEW);
         System.out.println(manager.getEpicList());
 
         //Удаляем подзадачу и проверяем статус эпика
