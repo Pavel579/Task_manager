@@ -1,33 +1,25 @@
 package data;
 
 import utils.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIdInEpic = new ArrayList<>();
-
+    private final ArrayList<Integer> subtaskIdInEpic = new ArrayList<>();
 
     public Epic() {
         super.setStatus(TaskStatus.NEW);
     }
 
     @Override
-    public void setStatus(TaskStatus status) {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Epic{" +
-                "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' +
-                "Epic status=" + getStatus() +
-                '}';
-    }
-
-    @Override
     public TaskStatus getStatus() {
         return super.getStatus();
+    }
+
+    @Override
+    public void setStatus(TaskStatus status) {
+
     }
 
     public ArrayList<Integer> getSubtaskIdInEpic() {
@@ -37,7 +29,6 @@ public class Epic extends Task {
     public void addSubtaskIdInEpic(int id) {
         subtaskIdInEpic.add(id);
     }
-
 
     //Метод вычисляет статус эпика
     public void checkEpicStatus(HashMap<Integer, Subtask> subtaskList) {
@@ -57,6 +48,11 @@ public class Epic extends Task {
         } else {
             super.setStatus(TaskStatus.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" + "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' + "Epic status=" + getStatus() + '}';
     }
 
 }

@@ -1,15 +1,24 @@
 package logic;
 
+import data.Epic;
+import data.Subtask;
+import data.Task;
+import utils.Managers;
+
 import java.util.*;
-import data.*;
 
-public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private static int id = 0;
+    private final HashMap<Integer, Task> taskList = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    private final HashMap<Integer, Epic> epicList = new HashMap<>();
+    private final HistoryManager historyInMemory = Managers.getDefaultHistory();
 
-    private HashMap<Integer, Task> taskList = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    private HashMap<Integer, Epic> epicList = new HashMap<>();
-
+    //Метод для присваивания уникального id классу Task и его наследников
+    public static int assignId() {
+        id++;
+        return id;
+    }
 
     //Метод возвращает список задач Task
     @Override
@@ -32,7 +41,7 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
     //Метод возвращает задачу Task по ее идентификатору
     @Override
     public Task getTaskById(int id) {
-        add(taskList.get(id));
+        historyInMemory.add(taskList.get(id));
         return taskList.get(id);
     }
 
@@ -76,7 +85,7 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
     //Метод возвращает задачу Subtask по ее идентификатору
     @Override
     public Subtask getSubtaskById(int id) {
-        add(subtaskList.get(id));
+        historyInMemory.add(subtaskList.get(id));
         return subtaskList.get(id);
     }
 
@@ -127,7 +136,7 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
     //Метод возвращает задачу Epic по ее идентификатору
     @Override
     public Task getEpicById(int id) {
-        add(epicList.get(id));
+        historyInMemory.add(epicList.get(id));
         return epicList.get(id);
     }
 
@@ -156,13 +165,5 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
 
         }
     }
-
-
-    //Метод для присваивания уникального id классу Task и его наследников
-    public static int assignId() {
-        id++;
-        return id;
-    }
-
 
 }

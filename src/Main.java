@@ -1,17 +1,20 @@
-import logic.InMemoryTaskManager;
-import data.*;
+import data.Epic;
+import data.Subtask;
+import data.Task;
+import logic.HistoryManager;
+import logic.TaskManager;
+import utils.Managers;
 import utils.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
-
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        TaskManager manager = Managers.getDefault();
+        HistoryManager historyManager = Managers.getDefaultHistory();
 
         //Создаем 2 эпика
         Epic epic1 = new Epic();
         Epic epic2 = new Epic();
-        System.out.println(epic1);
 
         //Создаем 3 подзадачи
         Subtask subtask1 = new Subtask("Sub1", "Description1", 1);
@@ -37,10 +40,10 @@ public class Main {
 
         manager.getEpicById(1);
         manager.getEpicById(2);
-        System.out.println("history   " + manager.getHistory());
+        System.out.println("history   " + historyManager.getHistory());
         manager.getSubtaskById(4);
         manager.getSubtaskById(3);
-        System.out.println("history   " + manager.getHistory());
+        System.out.println("history   " + historyManager.getHistory());
         manager.getTaskById(6);
         manager.getTaskById(6);
         manager.getTaskById(6);
@@ -48,14 +51,26 @@ public class Main {
         manager.getTaskById(6);
         manager.getTaskById(6);
         manager.getTaskById(6);
-        System.out.println("history   " + manager.getHistory());
-
-
+        System.out.println("history   " + historyManager.getHistory());
+        System.out.println();
 
         //выводим списки задач, подзадач и эпиков
         System.out.println(manager.getEpicList());
         System.out.println(manager.getSubtaskList());
-        //System.out.println(manager.getTaskList());
+        System.out.println(manager.getTaskList());
+        System.out.println();
+
+        manager.removeAllTasks();
+        System.out.println(manager.getTaskList());
+        System.out.println();
+        manager.createTask(task1);
+        manager.createTask(task2);
+        System.out.println(manager.getTaskList());
+        System.out.println();
+
+        task2.setName("Name task2");
+        manager.updateTask(task2);
+        System.out.println(manager.getTaskList());
         System.out.println();
 
         //Меняем статус подзадач

@@ -4,37 +4,18 @@ import logic.InMemoryTaskManager;
 import utils.TaskStatus;
 
 public class Task {
+    private final int id;
     private String name;
     private String description;
-    private int id;
     private TaskStatus status;
 
     public Task() {
         this.id = InMemoryTaskManager.assignId();
         status = TaskStatus.NEW;
-        System.out.println(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
-                '}';
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public void setDescription(String description) {
@@ -44,7 +25,6 @@ public class Task {
     public int getId() {
         return id;
     }
-
 
     public TaskStatus getStatus() {
         return status;
@@ -56,5 +36,9 @@ public class Task {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + status + '\'' + '}';
+    }
 
 }
