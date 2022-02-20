@@ -16,8 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Метод для присваивания уникального id классу Task и его наследников
     public static int assignId() {
-        id++;
-        return id;
+        return ++id;
     }
 
     //Метод возвращает список задач Task
@@ -35,26 +34,48 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Task
     @Override
     public void createTask(Task task) {
-        taskList.put(task.getId(), task);
+        if (task != null) {
+            taskList.put(task.getId(), task);
+        } else {
+            System.out.println("Задача не существует.");
+        }
+
     }
 
     //Метод возвращает задачу Task по ее идентификатору
     @Override
     public Task getTaskById(int id) {
-        historyInMemory.add(taskList.get(id));
-        return taskList.get(id);
+        if (taskList.containsKey(id)) {
+            historyInMemory.add(taskList.get(id));
+            return taskList.get(id);
+        } else {
+            System.out.println("Такой id не существует");
+            return null;
+        }
+
     }
 
     //Метод обновляет задачу Task
     @Override
     public void updateTask(Task updatedTask) {
-        taskList.replace(updatedTask.getId(), updatedTask);
+        if (updatedTask != null) {
+            taskList.replace(updatedTask.getId(), updatedTask);
+        } else {
+            System.out.println("Задача не существует");
+        }
+
     }
 
     //Метод удаляет задачу Task по ее идентификатору
     @Override
     public void removeTaskById(int id) {
-        taskList.remove(id);
+        if (taskList.containsKey(id)) {
+            taskList.remove(id);
+            System.out.println("Задача удалена");
+        } else {
+            System.out.println("Задачи с таким id нет. Задача не удалена");
+        }
+
     }
 
     //Метод возвращает список задач Subtask
@@ -76,40 +97,59 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Subtask
     @Override
     public void createSubtask(Subtask subtask) {
-        subtaskList.put(subtask.getId(), subtask);
         Epic epic = epicList.get(subtask.getEpicId());
-        epic.addSubtaskIdInEpic(subtask.getId());
-        epic.checkEpicStatus(subtaskList);
+        if (subtask != null && epic != null) {
+            subtaskList.put(subtask.getId(), subtask);
+            epic.addSubtaskIdInEpic(subtask.getId());
+            epic.checkEpicStatus(subtaskList);
+        } else {
+            System.out.println("Такой подзадачи не существует");
+        }
+
     }
 
     //Метод возвращает задачу Subtask по ее идентификатору
     @Override
     public Subtask getSubtaskById(int id) {
-        historyInMemory.add(subtaskList.get(id));
-        return subtaskList.get(id);
+        if (subtaskList.containsKey(id)) {
+            historyInMemory.add(subtaskList.get(id));
+            return subtaskList.get(id);
+        } else {
+            System.out.println("Подзадачи с таким id нет.");
+            return null;
+        }
+
     }
 
     //Метод обновляет задачу Subtask
     @Override
     public void updateSubtask(Subtask updatedSubtask) {
-        subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
         Epic epic = epicList.get(updatedSubtask.getEpicId());
-        epic.checkEpicStatus(subtaskList);
+        if (updatedSubtask != null && epic != null) {
+            subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
+            epic.checkEpicStatus(subtaskList);
+        } else {
+            System.out.println("Такой подзадачи не существует");
+        }
 
     }
 
     //Метод удаляет задачу Subtask по ее идентификатору
     @Override
     public void removeSubtaskById(int id) {
-        subtaskList.remove(id);
-        for (Epic epic : epicList.values()) {
-            for (int i = 0; i < epic.getSubtaskIdInEpic().size(); i++) {
-                if (epic.getSubtaskIdInEpic().get(i) == id) {
-                    epic.getSubtaskIdInEpic().remove(i);
-                    epic.checkEpicStatus(subtaskList);
-                    return;
+        if (subtaskList.containsKey(id)) {
+            subtaskList.remove(id);
+            for (Epic epic : epicList.values()) {
+                for (int i = 0; i < epic.getSubtaskIdInEpic().size(); i++) {
+                    if (epic.getSubtaskIdInEpic().get(i) == id) {
+                        epic.getSubtaskIdInEpic().remove(i);
+                        epic.checkEpicStatus(subtaskList);
+                        return;
+                    }
                 }
             }
+        } else {
+            System.out.println("Подзадачи с таким id нет. Задача не удалена");
         }
 
     }
@@ -130,40 +170,61 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Epic
     @Override
     public void createEpic(Epic epic) {
-        epicList.put(epic.getId(), epic);
+        if (epic != null) {
+            epicList.put(epic.getId(), epic);
+        } else {
+            System.out.println("Такого эпика не существует");
+        }
+
     }
 
     //Метод возвращает задачу Epic по ее идентификатору
     @Override
     public Task getEpicById(int id) {
-        historyInMemory.add(epicList.get(id));
-        return epicList.get(id);
+        if (epicList.containsKey(id)) {
+            historyInMemory.add(epicList.get(id));
+            return epicList.get(id);
+        } else {
+            System.out.println("Эпика с таким id нет");
+            return null;
+        }
+
     }
 
     //Метод обновляет задачу Epic
     @Override
     public void updateEpic(Epic updatedEpic) {
-        epicList.replace(updatedEpic.getId(), updatedEpic);
+        if (updatedEpic != null) {
+            epicList.replace(updatedEpic.getId(), updatedEpic);
+        } else {
+            System.out.println("Такого эпика не существует");
+        }
+
     }
 
     //Метод удаляет задачу Epic по ее идентификатору
     @Override
     public void removeEpicById(int id) {
-        epicList.remove(id);
+        if (epicList.containsKey(id)) {
+            epicList.remove(id);
 
-        Set<Map.Entry<Integer, Subtask>> entrySet = subtaskList.entrySet();
+            Set<Map.Entry<Integer, Subtask>> entrySet = subtaskList.entrySet();
 
-        Iterator<Map.Entry<Integer, Subtask>> itr = entrySet.iterator();
+            Iterator<Map.Entry<Integer, Subtask>> itr = entrySet.iterator();
 
-        while (itr.hasNext()) {
-            Map.Entry<Integer, Subtask> entry = itr.next();
-            Subtask subtask = entry.getValue();
+            while (itr.hasNext()) {
+                Map.Entry<Integer, Subtask> entry = itr.next();
+                Subtask subtask = entry.getValue();
 
-            if (subtask.getEpicId() == id) {
-                itr.remove();
+                if (subtask.getEpicId() == id) {
+                    itr.remove();
+                }
+
             }
-
+        } else {
+            System.out.println("Эпика с таким id не существует. Эпик не удален");
         }
+
     }
 
 }

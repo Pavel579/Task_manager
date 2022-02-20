@@ -19,7 +19,7 @@ public class Epic extends Task {
 
     @Override
     public void setStatus(TaskStatus status) {
-
+        throw new UnsupportedOperationException();
     }
 
     public ArrayList<Integer> getSubtaskIdInEpic() {

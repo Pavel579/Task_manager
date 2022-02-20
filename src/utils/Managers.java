@@ -10,7 +10,6 @@ public class Managers {
     private static final TaskManager manager = new InMemoryTaskManager();
 
     private Managers() {
-
     }
 
     public static TaskManager getDefault() {
