@@ -111,7 +111,6 @@ public class Main {
         System.out.println(manager.getTaskList());
         System.out.println();
 
-        //task2.setName("Name task2");
         manager.updateTask(task2);
         System.out.println(manager.getTaskList());
         System.out.println();
@@ -123,11 +122,9 @@ public class Main {
 
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
-        epic1.setStatus(TaskStatus.NEW);
         System.out.println(manager.getEpicList());
 
         //Удаляем подзадачу и проверяем статус эпика
-        //manager.removeSubtaskById(3);
         System.out.println(manager.getEpicList());
         System.out.println(manager.getSubtaskList());
 

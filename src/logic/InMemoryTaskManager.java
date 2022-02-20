@@ -97,11 +97,16 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Subtask
     @Override
     public void createSubtask(Subtask subtask) {
-        Epic epic = epicList.get(subtask.getEpicId());
-        if (subtask != null && epic != null) {
-            subtaskList.put(subtask.getId(), subtask);
-            epic.addSubtaskIdInEpic(subtask.getId());
-            epic.checkEpicStatus(subtaskList);
+        if (subtask != null) {
+            Epic epic = epicList.get(subtask.getEpicId());
+            if (epic != null) {
+                subtaskList.put(subtask.getId(), subtask);
+                epic.addSubtaskIdInEpic(subtask.getId());
+                epic.checkEpicStatus(subtaskList);
+            } else {
+                System.out.println("Эпика для подзадачи не существует");
+            }
+
         } else {
             System.out.println("Такой подзадачи не существует");
         }
@@ -124,10 +129,14 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод обновляет задачу Subtask
     @Override
     public void updateSubtask(Subtask updatedSubtask) {
-        Epic epic = epicList.get(updatedSubtask.getEpicId());
-        if (updatedSubtask != null && epic != null) {
-            subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
-            epic.checkEpicStatus(subtaskList);
+        if (updatedSubtask != null) {
+            Epic epic = epicList.get(updatedSubtask.getEpicId());
+            if (epic != null) {
+                subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
+                epic.checkEpicStatus(subtaskList);
+            } else {
+                System.out.println("Эпика для подзадачи не существует");
+            }
         } else {
             System.out.println("Такой подзадачи не существует");
         }
