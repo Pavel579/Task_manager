@@ -28,6 +28,9 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод удаляет все задачи Task
     @Override
     public void removeAllTasks() {
+        for (Task task : taskList.values()) {
+            historyInMemory.remove(task.getId());
+        }
         taskList.clear();
     }
 
@@ -70,6 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(int id) {
         if (taskList.containsKey(id)) {
+            historyInMemory.remove(id);
             taskList.remove(id);
             System.out.println("Задача удалена");
         } else {
@@ -87,6 +91,9 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод удаляет все задачи Subtask
     @Override
     public void removeAllSubtasks() {
+        for (Task task : subtaskList.values()) {
+            historyInMemory.remove(task.getId());
+        }
         subtaskList.clear();
         for (Epic epic : epicList.values()) {
             epic.getSubtaskIdInEpic().clear();
@@ -147,6 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtaskById(int id) {
         if (subtaskList.containsKey(id)) {
+            historyInMemory.remove(id);
             subtaskList.remove(id);
             for (Epic epic : epicList.values()) {
                 for (int i = 0; i < epic.getSubtaskIdInEpic().size(); i++) {
@@ -172,6 +180,9 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод удаляет все задачи Epic
     @Override
     public void removeAllEpic() {
+        for (Task task : subtaskList.values()) {
+            historyInMemory.remove(task.getId());
+        }
         epicList.clear();
         subtaskList.clear();
     }
@@ -215,6 +226,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicById(int id) {
         if (epicList.containsKey(id)) {
+            for (Integer subtaskId : epicList.get(id).getSubtaskIdInEpic()) {
+                historyInMemory.remove(subtaskId);
+            }
+            historyInMemory.remove(id);
             epicList.remove(id);
 
             Set<Map.Entry<Integer, Subtask>> entrySet = subtaskList.entrySet();
