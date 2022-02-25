@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static Node<Task> historyNode;
     private final Map<Integer, Node<Task>> historyMap = new HashMap<>();
     private Node<Task> first;
     private Node<Task> last;
@@ -19,8 +18,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             remove(task.getId());
         }
         linkLast(task);
-        historyMap.put(task.getId(), historyNode);
-
     }
 
     @Override
@@ -29,39 +26,39 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(historyMap.get(id));
             historyMap.remove(id);
         }
-
     }
 
     @Override
     public List<Task> getHistory() {
-        return getTask();
+        return getTasks();
     }
 
     //Метод добавляет элемент в конец "списка" (создает ее Node)
-    private void linkLast(Task e) {
-        final Node<Task> l = last;
-        final Node<Task> newNode = new Node<>(l, e, null);
-        historyNode = newNode;
+    private void linkLast(Task task) {
+        Node<Task> lastNode = last;
+        Node<Task> newNode = new Node<>(lastNode, task, null);
+        historyMap.put(task.getId(), newNode);
         last = newNode;
-        if (l == null)
+        if (lastNode == null) {
             first = newNode;
-        else
-            l.setNext(newNode);
+        } else {
+            lastNode.setNext(newNode);
+        }
     }
 
     //Метод собирает все задачи в ArrayList и возвращает его
-    private List<Task> getTask() {
-        List<Task> arrayList = new ArrayList<>();
-        for (Node<Task> x = first; x != null; x = x.getNext()) {
-            arrayList.add(x.getItem());
+    private List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        for (Node<Task> node = first; node != null; node = node.getNext()) {
+            tasks.add(node.getItem());
         }
-        return arrayList;
+        return tasks;
     }
 
     //Метод вырезает Node
     private void removeNode(Node<Task> node) {
-        final Node<Task> next = node.getNext();
-        final Node<Task> prev = node.getPrev();
+        Node<Task> next = node.getNext();
+        Node<Task> prev = node.getPrev();
 
         if (prev == null) {
             first = next;

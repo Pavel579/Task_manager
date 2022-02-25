@@ -8,8 +8,8 @@ import java.util.HashMap;
 public class Epic extends Task {
     private final ArrayList<Integer> subtaskIdInEpic = new ArrayList<>();
 
-    public Epic() {
-        super.setStatus(TaskStatus.NEW);
+    public Epic(String name, String description) {
+        super(name, description);
     }
 
     @Override

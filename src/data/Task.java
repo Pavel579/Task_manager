@@ -9,7 +9,9 @@ public class Task {
     private String description;
     private TaskStatus status;
 
-    public Task() {
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
         this.id = InMemoryTaskManager.assignId();
         status = TaskStatus.NEW;
     }

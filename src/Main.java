@@ -12,8 +12,8 @@ public class Main {
         TaskManager manager = Managers.getDefault();
 
         //Создаем 2 эпика
-        Epic epic1 = new Epic();
-        Epic epic2 = new Epic();
+        Epic epic1 = new Epic("Epic 1", "Description Epic 1");
+        Epic epic2 = new Epic("Epic 2", "Description Epic 2");
 
         //Создаем 3 подзадачи
         Subtask subtask1 = new Subtask("Sub1", "Description1", 1);
@@ -21,8 +21,11 @@ public class Main {
         Subtask subtask3 = new Subtask("Sub3", "Description3", 1);
 
         //Создаем 2 задачи
-        Task task1 = new Task();
-        Task task2 = new Task();
+        Task task1 = new Task("Task 1", "Description Task 1");
+        Task task2 = new Task("Task 2", "Description Task 2");
+
+        task1.setName("New task1 name");
+        task1.setDescription("New task1 description");
 
         manager.createTask(task1);
         manager.createTask(task2);
