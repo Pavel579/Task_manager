@@ -1,15 +1,21 @@
 import data.Epic;
 import data.Subtask;
 import data.Task;
+import logic.FileBackedTasksManager;
 import logic.HistoryManager;
 import logic.TaskManager;
 import utils.Managers;
+import utils.TaskStatus;
+
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
         HistoryManager historyManager = Managers.getDefaultHistory();
         TaskManager manager = Managers.getDefault();
+
+        FileBackedTasksManager fb = new FileBackedTasksManager(new File("test.csv"));
 
         //Создаем 2 эпика
         Epic epic1 = new Epic("Epic 1", "Description Epic 1");
@@ -27,34 +33,22 @@ public class Main {
         task1.setName("New task1 name");
         task1.setDescription("New task1 description");
 
-        manager.createTask(task1);
-        manager.createTask(task2);
-        manager.createEpic(epic1);
-        manager.createEpic(epic2);
-        manager.createSubtask(subtask1);
-        manager.createSubtask(subtask2);
-        manager.createSubtask(subtask3);
+        subtask1.setStatus(TaskStatus.DONE);
+        fb.createTask(task1);
+        fb.createTask(task2);
+        fb.createEpic(epic1);
+        fb.createSubtask(subtask1);
+        fb.createSubtask(subtask2);
 
-        manager.getTaskById(6);
-        manager.getTaskById(7);
-        manager.getTaskById(6);
-        manager.getSubtaskById(3);
-        manager.getSubtaskById(4);
-        manager.getSubtaskById(5);
-        manager.getEpicById(1);
-        manager.getEpicById(2);
-        manager.getEpicById(2);
-        manager.getEpicById(1);
-
-        System.out.println("history   " + historyManager.getHistory());
-
-        manager.removeTaskById(6);
-        System.out.println("history   " + historyManager.getHistory());
-        manager.removeAllTasks();
-        System.out.println("history   " + historyManager.getHistory());
-
-        manager.removeEpicById(1);
-        System.out.println("history   " + historyManager.getHistory());
+        fb.getTaskById(6);
+        fb.getTaskById(6);
+        fb.getTaskById(7);
+        fb.getTaskById(7);
+        fb.getTaskById(7);
+        fb.getTaskById(6);
+        fb.getEpicById(1);
+        fb.getTaskById(6);
+        fb.getSubtaskById(3);
 
     }
 }

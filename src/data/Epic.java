@@ -13,6 +13,11 @@ public class Epic extends Task {
     }
 
     @Override
+    public String getClassType() {
+        return "epic";
+    }
+
+    @Override
     public TaskStatus getStatus() {
         return super.getStatus();
     }

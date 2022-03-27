@@ -8,11 +8,11 @@ import utils.Managers;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private static int id = 0;
-    private final HashMap<Integer, Task> taskList = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    private final HashMap<Integer, Epic> epicList = new HashMap<>();
-    private final HistoryManager historyInMemory = Managers.getDefaultHistory();
+    protected static int id = 0;
+    protected final HashMap<Integer, Task> taskList = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    protected final HashMap<Integer, Epic> epicList = new HashMap<>();
+    protected final HistoryManager historyInMemory = Managers.getDefaultHistory();
 
     //Метод для присваивания уникального id классу Task и его наследников
     public static int assignId() {
