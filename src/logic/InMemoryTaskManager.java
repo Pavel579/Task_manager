@@ -8,11 +8,11 @@ import utils.Managers;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected static int id = 0;
-    protected final HashMap<Integer, Task> taskList = new HashMap<>();
-    protected final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    protected final HashMap<Integer, Epic> epicList = new HashMap<>();
-    protected final HistoryManager historyInMemory = Managers.getDefaultHistory();
+    static int id = 0;
+    final HashMap<Integer, Task> taskList = new HashMap<>();
+    final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    final HashMap<Integer, Epic> epicList = new HashMap<>();
+    final HistoryManager historyInMemory = Managers.getDefaultHistory();
 
     //Метод для присваивания уникального id классу Task и его наследников
     public static int assignId() {
@@ -168,7 +168,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Подзадачи с таким id нет. Задача не удалена");
         }
-
     }
 
     //Метод возвращает список задач Epic
@@ -195,7 +194,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Такого эпика не существует");
         }
-
     }
 
     //Метод возвращает задачу Epic по ее идентификатору
@@ -208,7 +206,6 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Эпика с таким id нет");
             return null;
         }
-
     }
 
     //Метод обновляет задачу Epic
@@ -219,7 +216,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Такого эпика не существует");
         }
-
     }
 
     //Метод удаляет задачу Epic по ее идентификатору
@@ -248,7 +244,5 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Эпика с таким id не существует. Эпик не удален");
         }
-
     }
-
 }

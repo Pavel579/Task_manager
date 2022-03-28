@@ -12,8 +12,6 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        TaskManager manager = Managers.getDefault();
 
         FileBackedTasksManager fb = new FileBackedTasksManager(new File("test.csv"));
 
@@ -30,15 +28,16 @@ public class Main {
         Task task1 = new Task("Task 1", "Description Task 1");
         Task task2 = new Task("Task 2", "Description Task 2");
 
-        task1.setName("New task1 name");
-        task1.setDescription("New task1 description");
-
         subtask1.setStatus(TaskStatus.DONE);
         fb.createTask(task1);
         fb.createTask(task2);
         fb.createEpic(epic1);
         fb.createSubtask(subtask1);
         fb.createSubtask(subtask2);
+
+        System.out.println(fb.getTaskList());
+        System.out.println(fb.getSubtaskList());
+        System.out.println(fb.getEpicList());
 
         fb.getTaskById(6);
         fb.getTaskById(6);

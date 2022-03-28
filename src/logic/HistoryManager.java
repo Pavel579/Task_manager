@@ -13,5 +13,4 @@ public interface HistoryManager {
 
     //Метод возвращает список истории просмотров задач
     List<Task> getHistory();
-
 }

@@ -1,6 +1,7 @@
 package data;
 
 import utils.TaskStatus;
+import utils.TaskType;
 
 public class Subtask extends Task {
     private final int epicId;
@@ -15,8 +16,8 @@ public class Subtask extends Task {
     }
 
     @Override
-    public String getClassType() {
-        return "subtask";
+    public TaskType getClassType() {
+        return TaskType.SUBTASK;
     }
 
     @Override
@@ -36,7 +37,8 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" + "epicId=" + epicId + " Status=" + getStatus() + '}';
+        return "Subtask{" + "epicId=" + epicId + " Status=" + getStatus() + ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' + ", id=" + getId() + '}';
     }
 
 }

@@ -1,6 +1,7 @@
 package data;
 
 import utils.TaskStatus;
+import utils.TaskType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +14,8 @@ public class Epic extends Task {
     }
 
     @Override
-    public String getClassType() {
-        return "epic";
+    public TaskType getClassType() {
+        return TaskType.EPIC;
     }
 
     @Override
@@ -57,7 +58,8 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" + "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' + "Epic status=" + getStatus() + '}';
+        return "Epic{" + "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' + "Epic status=" + getStatus() + ", name='" +
+                getName() + '\'' + ", description='" + getDescription() + '\'' + ", id=" + getId() + '}';
     }
 
 }

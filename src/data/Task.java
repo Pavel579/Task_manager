@@ -2,20 +2,20 @@ package data;
 
 import logic.InMemoryTaskManager;
 import utils.TaskStatus;
+import utils.TaskType;
 
 import java.util.Objects;
 
 public class Task {
     private final int id;
-    private String name;
-    private String description;
-    private TaskStatus status;
+    private final String name;
+    private final String description;
+    private TaskStatus status = TaskStatus.NEW;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = InMemoryTaskManager.assignId();
-        status = TaskStatus.NEW;
     }
 
     @Override
@@ -31,16 +31,8 @@ public class Task {
         return Objects.hash(id);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getDescription() {
@@ -61,13 +53,14 @@ public class Task {
         }
     }
 
-    public String getClassType(){
-        return "task";
+    public TaskType getClassType() {
+        return TaskType.TASK;
     }
 
     @Override
     public String toString() {
-        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + status + '\'' + '}';
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' +
+                ", id=" + id + ", status='" + status + '\'' + '}';
     }
 
 }
