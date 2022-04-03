@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Objects;
+
 class Node<Task> {
     private Task item;
     private Node<Task> next;
@@ -33,5 +35,13 @@ class Node<Task> {
 
     void setPrev(Node<Task> prev) {
         this.prev = prev;
+    }
+
+    boolean hasNext() {
+        return Objects.nonNull(next);
+    }
+
+    boolean hasPrev() {
+        return Objects.nonNull(prev);
     }
 }

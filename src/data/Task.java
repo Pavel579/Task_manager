@@ -18,6 +18,12 @@ public class Task {
         this.id = InMemoryTaskManager.assignId();
     }
 
+    public Task(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,8 +65,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' +
-                ", id=" + id + ", status='" + status + '\'' + '}';
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + status + '\'' + '}';
     }
 
 }
