@@ -6,8 +6,8 @@ import logic.InMemoryTaskManager;
 import logic.TaskManager;
 
 public class Managers {
-    private static final HistoryManager historyManager = new InMemoryHistoryManager();
     private static final TaskManager manager = new InMemoryTaskManager();
+    private static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     private Managers() {
     }
@@ -19,5 +19,4 @@ public class Managers {
     public static HistoryManager getDefaultHistory() {
         return historyManager;
     }
-
 }

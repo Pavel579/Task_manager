@@ -4,6 +4,8 @@ import logic.InMemoryTaskManager;
 import utils.TaskStatus;
 import utils.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -11,6 +13,8 @@ public class Task {
     private final String name;
     private final String description;
     private TaskStatus status = TaskStatus.NEW;
+    Duration duration;
+    LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
@@ -22,6 +26,26 @@ public class Task {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Task(int id, String name, String description, Duration duration, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 
     @Override
@@ -65,7 +89,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + status + '\'' + '}';
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\''
+                + ", id=" + id + ", status='" + status + '\'' + '}';
     }
 
 }

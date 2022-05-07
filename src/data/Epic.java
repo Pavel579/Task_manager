@@ -3,11 +3,14 @@ package data;
 import utils.TaskStatus;
 import utils.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtaskIdInEpic = new ArrayList<>();
+    LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -15,6 +18,26 @@ public class Epic extends Task {
 
     public Epic(int id, String name, String description) {
         super(id, name, description);
+    }
+
+    public void checkDurationAndStartTime(HashMap<Integer, Subtask> subtaskList){
+        if (!subtaskIdInEpic.isEmpty()) {
+            startTime = subtaskList.get(subtaskIdInEpic.get(0)).startTime;
+            endTime = subtaskList.get(subtaskIdInEpic.get(0)).getEndTime();
+
+            for (Integer subtaskId : subtaskIdInEpic) {
+                if (subtaskList.get(subtaskId).startTime.isBefore(startTime)) {
+                    startTime = subtaskList.get(subtaskId).startTime;
+                }
+                if (subtaskList.get(subtaskId).getEndTime().isAfter(endTime)) {
+                    endTime = subtaskList.get(subtaskId).getEndTime();
+                }
+            }
+            duration = Duration.between(startTime, endTime);
+        }
+        /*System.out.println("epic starttime " + startTime);
+        System.out.println(endTime);
+        System.out.println("Epic duration " + duration);*/
     }
 
     @Override
@@ -62,7 +85,8 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" + "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' + "Epic status=" + getStatus() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", id=" + getId() + '}';
+        return "Epic{" + "SubtaskIdInEpic=" + subtaskIdInEpic + '\'' + "Epic status=" + getStatus() + ", name='" +
+                getName() + '\'' + ", description='" + getDescription() + '\'' + ", id=" + getId() + '}';
     }
 
 }

@@ -37,12 +37,11 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Task
     @Override
     public void createTask(Task task) {
-        if (task != null) {
+        if (task != null && task.getId() > 0 && !taskList.containsKey(task.getId()) && isTaskNotCrossed(task)) {
             taskList.put(task.getId(), task);
         } else {
             System.out.println("Задача не существует.");
         }
-
     }
 
     //Метод возвращает задачу Task по ее идентификатору
@@ -55,18 +54,16 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Такой id не существует");
             return null;
         }
-
     }
 
     //Метод обновляет задачу Task
     @Override
     public void updateTask(Task updatedTask) {
-        if (updatedTask != null) {
+        if (updatedTask != null && isTaskNotCrossed(updatedTask)) {
             taskList.replace(updatedTask.getId(), updatedTask);
         } else {
             System.out.println("Задача не существует");
         }
-
     }
 
     //Метод удаляет задачу Task по ее идентификатору
@@ -79,7 +76,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Задачи с таким id нет. Задача не удалена");
         }
-
     }
 
     //Метод возвращает список задач Subtask
@@ -98,18 +94,20 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epicList.values()) {
             epic.getSubtaskIdInEpic().clear();
             epic.checkEpicStatus(subtaskList);
+            epic.checkDurationAndStartTime(subtaskList);
         }
     }
 
     //Метод создает задачу Subtask
     @Override
     public void createSubtask(Subtask subtask) {
-        if (subtask != null) {
+        if (subtask != null && subtask.getId() > 0 && !subtaskList.containsKey(subtask.getId()) && isTaskNotCrossed(subtask)) {
             Epic epic = epicList.get(subtask.getEpicId());
             if (epic != null) {
                 subtaskList.put(subtask.getId(), subtask);
                 epic.addSubtaskIdInEpic(subtask.getId());
                 epic.checkEpicStatus(subtaskList);
+                epic.checkDurationAndStartTime(subtaskList);
             } else {
                 System.out.println("Эпика для подзадачи не существует");
             }
@@ -117,7 +115,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Такой подзадачи не существует");
         }
-
     }
 
     //Метод возвращает задачу Subtask по ее идентификатору
@@ -130,24 +127,23 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Подзадачи с таким id нет.");
             return null;
         }
-
     }
 
     //Метод обновляет задачу Subtask
     @Override
     public void updateSubtask(Subtask updatedSubtask) {
-        if (updatedSubtask != null) {
+        if (updatedSubtask != null && isTaskNotCrossed(updatedSubtask)) {
             Epic epic = epicList.get(updatedSubtask.getEpicId());
             if (epic != null) {
                 subtaskList.replace(updatedSubtask.getId(), updatedSubtask);
                 epic.checkEpicStatus(subtaskList);
+                epic.checkDurationAndStartTime(subtaskList);
             } else {
                 System.out.println("Эпика для подзадачи не существует");
             }
         } else {
             System.out.println("Такой подзадачи не существует");
         }
-
     }
 
     //Метод удаляет задачу Subtask по ее идентификатору
@@ -161,6 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
                     if (epic.getSubtaskIdInEpic().get(i) == id) {
                         epic.getSubtaskIdInEpic().remove(i);
                         epic.checkEpicStatus(subtaskList);
+                        epic.checkDurationAndStartTime(subtaskList);
                         return;
                     }
                 }
@@ -189,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Epic
     @Override
     public void createEpic(Epic epic) {
-        if (epic != null) {
+        if (epic != null && epic.getId() > 0 && !epicList.containsKey(epic.getId())) {
             epicList.put(epic.getId(), epic);
         } else {
             System.out.println("Такого эпика не существует");
@@ -244,5 +241,38 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Эпика с таким id не существует. Эпик не удален");
         }
+    }
+
+    public Set<Task> getPrioritizedTasks() {
+        Comparator<Task> comparator = (o1, o2) -> {
+            if (o1.getStartTime().isBefore(o2.getStartTime())) {
+                return -1;
+            } else if (o1.getStartTime().isAfter(o2.getStartTime())) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+        Set<Task> taskSet = new TreeSet<>(comparator);
+        taskSet.addAll(taskList.values());
+        taskSet.addAll(subtaskList.values());
+        return taskSet;
+    }
+
+    public boolean isTaskNotCrossed(Task task) {
+        Set<Task> taskSet = getPrioritizedTasks();
+        taskSet.add(task);
+        List<Task> list = new ArrayList<>(taskSet);
+        boolean b = true;
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (list.get(i).getEndTime().isAfter(list.get(i + 1).getStartTime())) {
+                    b = false;
+                }
+            }
+        } else {
+            return true;
+        }
+        return b;
     }
 }
