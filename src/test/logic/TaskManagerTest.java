@@ -1,11 +1,12 @@
-package logic;
+package test.logic;
 
-import data.Epic;
-import data.Subtask;
-import data.Task;
+import logic.FileBackedTasksManager;
+import logic.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.Managers;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static logic.FileBackedTasksManager.loadFromFile;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -26,12 +30,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     public abstract void createManager();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         createManager();
     }
 
     @Test
-    public void createTask() {
+    void createTask() {
         Task task = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Epic epic = new Epic(10, "name", "description");
@@ -49,7 +53,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void createNullTask() {
+    void createNullTask() {
         Task task = null;
         Subtask subtask = null;
         Epic epic = null;
@@ -65,7 +69,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void createTaskWithIncorrectId() {
+    void createTaskWithIncorrectId() {
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Task task2 = new Task(0, "name", "description", Duration.ofDays(5),
@@ -105,7 +109,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnTaskById() {
+    void shouldReturnTaskById() {
+        System.setOut(new PrintStream(output));
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         taskManager.createTask(task1);
@@ -123,10 +128,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertNotEquals(taskManager.getTaskById(4), task1);
         assertNotEquals(taskManager.getEpicById(5), epic1);
         assertNotEquals(taskManager.getSubtaskById(6), subtask1);
+        assertEquals("Такой id не существует\r\nЭпика с таким id нет\r\nПодзадачи с таким id нет.\r\n",
+                output.toString());
+        System.setOut(null);
     }
 
     @Test
-    public void shouldRemoveTaskById() {
+    void shouldRemoveTaskById() {
         System.setOut(new PrintStream(output));
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
@@ -149,7 +157,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotRemoveTaskByIncorrectId() {
+    void shouldNotRemoveTaskByIncorrectId() {
         System.setOut(new PrintStream(output));
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
@@ -160,7 +168,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotRemoveEpicByIncorrectId() {
+    void shouldNotRemoveEpicByIncorrectId() {
         System.setOut(new PrintStream(output));
         Epic epic1 = new Epic(2, "name", "description");
         taskManager.createEpic(epic1);
@@ -170,7 +178,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotRemoveSubtaskByIncorrectId() {
+    void shouldNotRemoveSubtaskByIncorrectId() {
         System.setOut(new PrintStream(output));
         Epic epic1 = new Epic(2, "name", "description");
         taskManager.createEpic(epic1);
@@ -183,7 +191,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldRemoveAllTasks() {
+    void shouldRemoveAllTasks() {
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Task task2 = new Task(2, "name", "description", Duration.ofDays(5),
@@ -198,7 +206,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldRemoveAllEpics() {
+    void shouldRemoveAllEpics() {
         Epic epic1 = new Epic(1, "name", "description");
         Epic epic2 = new Epic(2, "name", "description");
         Epic epic3 = new Epic(3, "name", "description");
@@ -210,7 +218,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldRemoveAllSubtasks() {
+    void shouldRemoveAllSubtasks() {
         Epic epic1 = new Epic(1, "name", "description");
         taskManager.createEpic(epic1);
         Subtask subtask1 = new Subtask(2, "name", "description", 1, Duration.ofDays(5),
@@ -227,7 +235,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateTask() {
+    void shouldUpdateTask() {
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         taskManager.createTask(task1);
@@ -238,7 +246,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotUpdateTaskWhenNull() {
+    void shouldNotUpdateTaskWhenNull() {
         System.setOut(new PrintStream(output));
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
@@ -250,7 +258,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateEpic() {
+    void shouldUpdateEpic() {
         Epic epic1 = new Epic(1, "name", "description");
         taskManager.createEpic(epic1);
         Epic epic2 = new Epic(1, "name", "description2");
@@ -259,7 +267,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotUpdateEpcWhenNull() {
+    void shouldNotUpdateEpcWhenNull() {
         System.setOut(new PrintStream(output));
         Epic epic1 = new Epic(1, "name", "description");
         taskManager.createEpic(epic1);
@@ -270,7 +278,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateSubtask() {
+    void shouldUpdateSubtask() {
         Epic epic1 = new Epic(1, "name", "description");
         Subtask subtask1 = new Subtask(2, "name", "description", 1, Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
@@ -283,7 +291,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotUpdateSubtaskWhenNull() {
+    void shouldNotUpdateSubtaskWhenNull() {
         System.setOut(new PrintStream(output));
         Epic epic1 = new Epic(1, "name", "description");
         Subtask subtask1 = new Subtask(2, "name", "description", 1, Duration.ofDays(5),
@@ -296,7 +304,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotUpdateSubtaskWhenNoEpic() {
+    void shouldNotUpdateSubtaskWhenNoEpic() {
         System.setOut(new PrintStream(output));
         Epic epic1 = new Epic(1, "name", "description");
         Subtask subtask1 = new Subtask(2, "name", "description", 1, Duration.ofDays(5),
@@ -310,7 +318,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void isTaskNotCrossed() {
+    void isTaskNotCrossed() {
         Task task1 = new Task(1, "name", "description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Task task2 = new Task(2, "name", "description", Duration.ofDays(3),
@@ -324,9 +332,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertFalse(taskManager.isTaskNotCrossed(task3));
     }
 
-
     @Test
-    public void checkHistoryAndTasksWritingReadingInFile() {
+    void checkHistoryAndTasksWritingReadingInFile() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -341,7 +348,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
         List<Task> tasksList = new ArrayList<>();
         tasksList.add(fb.getTaskList().get(0));
         tasksList.add(fb.getEpicList().get(0));
@@ -356,7 +363,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void checkRepeatInHistory() {
+    void checkRepeatInHistory() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -372,7 +379,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertEquals(historyList.get(2).getDescription(), "Task description");
         assertEquals(historyList.get(0).getDescription(), "Subtask description");
@@ -380,7 +387,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void checkEmptyHistory() {
+    void checkEmptyHistory() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -392,13 +399,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertTrue(historyList.isEmpty());
     }
 
     @Test
-    public void checkRemoveFirstFromHistory() {
+    void checkRemoveFirstFromHistory() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -415,14 +422,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertEquals(historyList.get(1).getDescription(), "Task description");
         assertEquals(historyList.get(0).getDescription(), "Epic description");
     }
 
     @Test
-    public void checkRemoveEpicFromHistory() {
+    void checkRemoveEpicFromHistory() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -438,13 +445,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertEquals(historyList.get(0).getDescription(), "Task description");
     }
 
     @Test
-    public void checkRemoveMiddleFromHistory() {
+    void checkRemoveMiddleFromHistory() {
+        System.setOut(new PrintStream(output));
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -457,17 +465,19 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         fileTaskManager.getTaskById(1);
         fileTaskManager.getEpicById(2);
         fileTaskManager.removeTaskById(1);
+        assertEquals("Задача удалена\r\n", output.toString());
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertEquals(historyList.get(0).getDescription(), "Subtask description");
         assertEquals(historyList.get(1).getDescription(), "Epic description");
+        System.setOut(null);
     }
 
     @Test
-    public void checkRemoveFromEnfOfHistory() {
+    void checkRemoveFromEnfOfHistory() {
         Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
                 LocalDateTime.of(2021, 5, 1, 0, 0));
         Epic epic1 = new Epic(2, "name", "Epic description");
@@ -483,10 +493,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         File file = new File("test.csv");
         FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.historyInMemory.getHistory());
+        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
 
         assertEquals(historyList.get(0).getDescription(), "Task description");
         assertEquals(historyList.get(1).getDescription(), "Epic description");
     }
-
 }

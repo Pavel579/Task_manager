@@ -1,11 +1,11 @@
 package logic;
 
-import data.Epic;
-import data.Subtask;
-import data.Task;
 import exceptions.ManagerSaveException;
-import utils.TaskStatus;
-import utils.TaskType;
+import tasks.Epic;
+import tasks.Status;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.Type;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,7 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
     private final Set<Task> tasks = new HashSet<>();
@@ -23,11 +27,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-    }
-
-    public static void main(String[] args) {
-        File file = new File("test.csv");
-        FileBackedTasksManager fileTaskManager = loadFromFile(file);
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
@@ -76,11 +75,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         /*Если удалить данное поле, то в дальнейшем не получится создавать задачи с правильными id. А метод assignId()
          не могу применить, т.к. порядок id в файле может быть вида (1, 3, 6, 7)*/
         id = Integer.parseInt(taskArray[0]);
-        switch (TaskType.valueOf(taskArray[1])) {
+        switch (Type.valueOf(taskArray[1])) {
             case TASK:
                 task = new Task(Integer.parseInt(taskArray[0]), taskArray[2].trim(), taskArray[4].trim(),
                         Duration.parse(taskArray[6].trim()), LocalDateTime.parse(taskArray[7].trim()));
-                task.setStatus(TaskStatus.valueOf(taskArray[3].trim()));
+                task.setStatus(Status.valueOf(taskArray[3].trim()));
                 super.createTask(task);
                 break;
             case EPIC:
@@ -91,7 +90,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 task = new Subtask(Integer.parseInt(taskArray[0]), taskArray[2].trim(), taskArray[4].trim(),
                         Integer.parseInt(taskArray[5].trim()), Duration.parse(taskArray[6].trim()),
                         LocalDateTime.parse(taskArray[7].trim()));
-                task.setStatus(TaskStatus.valueOf(taskArray[3].trim()));
+                task.setStatus(Status.valueOf(taskArray[3].trim()));
                 super.createSubtask((Subtask) task);
                 break;
         }
@@ -126,7 +125,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         String epicId = "";
         if (task == null) {
             return null;
-        } else if (task.getClassType() == TaskType.SUBTASK) {
+        } else if (task.getClassType() == Type.SUBTASK) {
             Subtask subtask = (Subtask) task;
             epicId = String.valueOf(subtask.getEpicId());
         }

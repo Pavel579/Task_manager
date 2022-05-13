@@ -1,7 +1,4 @@
-package data;
-
-import utils.TaskStatus;
-import utils.TaskType;
+package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -29,8 +26,8 @@ public class Subtask extends Task {
     }
 
     @Override
-    public TaskType getClassType() {
-        return TaskType.SUBTASK;
+    public Type getClassType() {
+        return Type.SUBTASK;
     }
 
     @Override
@@ -39,12 +36,12 @@ public class Subtask extends Task {
     }
 
     @Override
-    public TaskStatus getStatus() {
+    public Status getStatus() {
         return super.getStatus();
     }
 
     @Override
-    public void setStatus(TaskStatus status) {
+    public void setStatus(Status status) {
         super.setStatus(status);
     }
 

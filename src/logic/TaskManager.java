@@ -1,8 +1,8 @@
 package logic;
 
-import data.Epic;
-import data.Subtask;
-import data.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.ArrayList;
 

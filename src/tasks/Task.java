@@ -1,8 +1,6 @@
-package data;
+package tasks;
 
 import logic.InMemoryTaskManager;
-import utils.TaskStatus;
-import utils.TaskType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,9 +10,9 @@ public class Task {
     private final int id;
     private final String name;
     private final String description;
-    private TaskStatus status = TaskStatus.NEW;
     Duration duration;
     LocalDateTime startTime;
+    private Status status = Status.NEW;
 
     public Task(String name, String description) {
         this.name = name;
@@ -73,18 +71,18 @@ public class Task {
         return id;
     }
 
-    public TaskStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(TaskStatus status) {
-        if (status.equals(TaskStatus.NEW) || status.equals(TaskStatus.IN_PROGRESS) || status.equals(TaskStatus.DONE)) {
+    public void setStatus(Status status) {
+        if (status.equals(Status.NEW) || status.equals(Status.IN_PROGRESS) || status.equals(Status.DONE)) {
             this.status = status;
         }
     }
 
-    public TaskType getClassType() {
-        return TaskType.TASK;
+    public Type getClassType() {
+        return Type.TASK;
     }
 
     @Override

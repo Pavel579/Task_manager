@@ -1,22 +1,34 @@
 package logic;
 
-import data.Epic;
-import data.Subtask;
-import data.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 import utils.Managers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     static int id = 0;
+
+    final HistoryManager historyInMemory = Managers.getDefaultHistory();
     final HashMap<Integer, Task> taskList = new HashMap<>();
     final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     final HashMap<Integer, Epic> epicList = new HashMap<>();
-    final HistoryManager historyInMemory = Managers.getDefaultHistory();
 
     //Метод для присваивания уникального id классу Task и его наследников
     public static int assignId() {
         return ++id;
+    }
+
+    public HistoryManager getHistoryInMemory() {
+        return historyInMemory;
     }
 
     //Метод возвращает список задач Task
@@ -101,7 +113,8 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Subtask
     @Override
     public void createSubtask(Subtask subtask) {
-        if (subtask != null && subtask.getId() > 0 && !subtaskList.containsKey(subtask.getId()) && isTaskNotCrossed(subtask)) {
+        if (subtask != null && subtask.getId() > 0 && !subtaskList.containsKey(subtask.getId()) &&
+                isTaskNotCrossed(subtask)) {
             Epic epic = epicList.get(subtask.getEpicId());
             if (epic != null) {
                 subtaskList.put(subtask.getId(), subtask);

@@ -1,4 +1,7 @@
-package logic;
+package test.logic;
+
+import logic.FileBackedTasksManager;
+import logic.InMemoryTaskManager;
 
 import java.io.File;
 

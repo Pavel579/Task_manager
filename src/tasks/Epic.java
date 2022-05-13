@@ -1,7 +1,4 @@
-package data;
-
-import utils.TaskStatus;
-import utils.TaskType;
+package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,7 +7,7 @@ import java.util.HashMap;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtaskIdInEpic = new ArrayList<>();
-    LocalDateTime endTime;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -20,7 +17,7 @@ public class Epic extends Task {
         super(id, name, description);
     }
 
-    public void checkDurationAndStartTime(HashMap<Integer, Subtask> subtaskList){
+    public void checkDurationAndStartTime(HashMap<Integer, Subtask> subtaskList) {
         if (!subtaskIdInEpic.isEmpty()) {
             startTime = subtaskList.get(subtaskIdInEpic.get(0)).startTime;
             endTime = subtaskList.get(subtaskIdInEpic.get(0)).getEndTime();
@@ -35,23 +32,20 @@ public class Epic extends Task {
             }
             duration = Duration.between(startTime, endTime);
         }
-        /*System.out.println("epic starttime " + startTime);
-        System.out.println(endTime);
-        System.out.println("Epic duration " + duration);*/
     }
 
     @Override
-    public TaskType getClassType() {
-        return TaskType.EPIC;
+    public Type getClassType() {
+        return Type.EPIC;
     }
 
     @Override
-    public TaskStatus getStatus() {
+    public Status getStatus() {
         return super.getStatus();
     }
 
     @Override
-    public void setStatus(TaskStatus status) {
+    public void setStatus(Status status) {
         throw new UnsupportedOperationException();
     }
 
@@ -68,18 +62,18 @@ public class Epic extends Task {
         int valueNew = 0;
         int valueDone = 0;
         for (Integer subtaskId : subtaskIdInEpic) {
-            if (subtaskList.get(subtaskId).getStatus().equals(TaskStatus.NEW)) {
+            if (subtaskList.get(subtaskId).getStatus().equals(Status.NEW)) {
                 valueNew++;
-            } else if (subtaskList.get(subtaskId).getStatus().equals(TaskStatus.DONE)) {
+            } else if (subtaskList.get(subtaskId).getStatus().equals(Status.DONE)) {
                 valueDone++;
             }
         }
         if (valueNew == subtaskIdInEpic.size() || subtaskIdInEpic.size() == 0) {
-            super.setStatus(TaskStatus.NEW);
+            super.setStatus(Status.NEW);
         } else if (valueDone == subtaskIdInEpic.size()) {
-            super.setStatus(TaskStatus.DONE);
+            super.setStatus(Status.DONE);
         } else {
-            super.setStatus(TaskStatus.IN_PROGRESS);
+            super.setStatus(Status.IN_PROGRESS);
         }
     }
 

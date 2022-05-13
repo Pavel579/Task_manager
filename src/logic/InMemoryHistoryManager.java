@@ -1,6 +1,6 @@
 package logic;
 
-import data.Task;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
