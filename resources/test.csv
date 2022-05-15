@@ -3,4 +3,4 @@ id,type,name,status,description,epic,duration,startTime
 2,EPIC,name,NEW,Epic description,,PT120H,1999-01-01T00:00
 3,SUBTASK,name,NEW,Subtask description,2,PT120H,1999-01-01T00:00
 
-2,1
+1,2

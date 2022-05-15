@@ -61,6 +61,6 @@ public interface TaskManager {
     //Метод удаляет задачу Epic по ее идентификатору
     void removeEpicById(int id);
 
+    //Метод проверяет пересечение задач по времени
     boolean isTaskNotCrossed(Task task);
-
 }

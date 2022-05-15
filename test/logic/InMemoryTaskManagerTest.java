@@ -1,7 +1,5 @@
-package test.logic;
+package logic;
 
-import logic.FileBackedTasksManager;
-import logic.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -9,25 +7,24 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static logic.FileBackedTasksManager.loadFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class TaskManagerTest<T extends TaskManager> {
+public class InMemoryTaskManagerTest extends TaskManagerTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    T taskManager;
-    T fileTaskManager;
 
-    public abstract void createManager();
+    @Override
+    public void createManager() {
+        taskManager = new InMemoryTaskManager();
+    }
 
     @BeforeEach
     void beforeEach() {
@@ -40,7 +37,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Epic epic = new Epic(10, "name", "description");
         Subtask subtask = new Subtask(2, "name", "description", 10, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
+                LocalDateTime.of(1999, 2, 1, 0, 0, 0, 0));
         taskManager.createTask(task);
         taskManager.createEpic(epic);
         taskManager.createSubtask(subtask);
@@ -92,7 +89,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         listEpic.add(epic1);
 
         Subtask subtask1 = new Subtask(3, "name", "description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
+                LocalDateTime.of(1999, 2, 1, 0, 0, 0, 0));
         Subtask subtask2 = new Subtask(0, "name", "description", 2, Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Subtask subtask3 = new Subtask(3, "name", "description", 2, Duration.ofDays(5),
@@ -119,7 +116,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createEpic(epic1);
 
         Subtask subtask1 = new Subtask(3, "name", "description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
+                LocalDateTime.of(1999, 2, 1, 0, 0, 0, 0));
         taskManager.createSubtask(subtask1);
 
         assertEquals(taskManager.getTaskById(1), task1);
@@ -224,9 +221,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask1 = new Subtask(2, "name", "description", 1, Duration.ofDays(5),
                 LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
         Subtask subtask2 = new Subtask(3, "name", "description", 1, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
+                LocalDateTime.of(1999, 2, 1, 0, 0, 0, 0));
         Subtask subtask3 = new Subtask(4, "name", "description", 1, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
+                LocalDateTime.of(1999, 3, 1, 0, 0, 0, 0));
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
         taskManager.createSubtask(subtask3);
@@ -330,172 +327,5 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(task3);
 
         assertFalse(taskManager.isTaskNotCrossed(task3));
-    }
-
-    @Test
-    void checkHistoryAndTasksWritingReadingInFile() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.getEpicById(2);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-        List<Task> tasksList = new ArrayList<>();
-        tasksList.add(fb.getTaskList().get(0));
-        tasksList.add(fb.getEpicList().get(0));
-        tasksList.add(fb.getSubtaskList().get(0));
-
-        assertEquals(historyList.get(0).getDescription(), "Task description");
-        assertEquals(historyList.get(1).getDescription(), "Subtask description");
-        assertEquals(historyList.get(2).getDescription(), "Epic description");
-        assertEquals(tasksList.get(0).getDescription(), "Task description");
-        assertEquals(tasksList.get(2).getDescription(), "Subtask description");
-        assertEquals(tasksList.get(1).getDescription(), "Epic description");
-    }
-
-    @Test
-    void checkRepeatInHistory() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.getEpicById(2);
-        fileTaskManager.getTaskById(1);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertEquals(historyList.get(2).getDescription(), "Task description");
-        assertEquals(historyList.get(0).getDescription(), "Subtask description");
-        assertEquals(historyList.get(1).getDescription(), "Epic description");
-    }
-
-    @Test
-    void checkEmptyHistory() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertTrue(historyList.isEmpty());
-    }
-
-    @Test
-    void checkRemoveFirstFromHistory() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.getEpicById(2);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.removeSubtaskById(3);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertEquals(historyList.get(1).getDescription(), "Task description");
-        assertEquals(historyList.get(0).getDescription(), "Epic description");
-    }
-
-    @Test
-    void checkRemoveEpicFromHistory() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.getEpicById(2);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.removeEpicById(2);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertEquals(historyList.get(0).getDescription(), "Task description");
-    }
-
-    @Test
-    void checkRemoveMiddleFromHistory() {
-        System.setOut(new PrintStream(output));
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.getEpicById(2);
-        fileTaskManager.removeTaskById(1);
-        assertEquals("Задача удалена\r\n", output.toString());
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertEquals(historyList.get(0).getDescription(), "Subtask description");
-        assertEquals(historyList.get(1).getDescription(), "Epic description");
-        System.setOut(null);
-    }
-
-    @Test
-    void checkRemoveFromEnfOfHistory() {
-        Task task1 = new Task(1, "name", "Task description", Duration.ofDays(5),
-                LocalDateTime.of(2021, 5, 1, 0, 0));
-        Epic epic1 = new Epic(2, "name", "Epic description");
-        Subtask subtask1 = new Subtask(3, "name", "Subtask description", 2, Duration.ofDays(5),
-                LocalDateTime.of(1999, 1, 1, 0, 0, 0, 0));
-        fileTaskManager.createTask(task1);
-        fileTaskManager.createEpic(epic1);
-        fileTaskManager.createSubtask(subtask1);
-        fileTaskManager.getTaskById(1);
-        fileTaskManager.getEpicById(2);
-        fileTaskManager.getSubtaskById(3);
-        fileTaskManager.removeSubtaskById(3);
-
-        File file = new File("test.csv");
-        FileBackedTasksManager fb = loadFromFile(file);
-        List<Task> historyList = new ArrayList<>(fb.getHistoryInMemory().getHistory());
-
-        assertEquals(historyList.get(0).getDescription(), "Task description");
-        assertEquals(historyList.get(1).getDescription(), "Epic description");
     }
 }

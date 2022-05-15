@@ -1,8 +1,10 @@
 import logic.FileBackedTasksManager;
+import logic.TaskManager;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+import utils.Managers;
 
 import java.io.File;
 import java.time.Duration;
@@ -11,7 +13,8 @@ import java.time.LocalDateTime;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
-        FileBackedTasksManager fb = new FileBackedTasksManager(new File("test.csv"));
+        TaskManager manager = Managers.getDefault();
+        FileBackedTasksManager fb = new FileBackedTasksManager(new File("resources/test.csv"));
 
         //Создаем 2 эпика
         Epic epic1 = new Epic(1, "Epic 1", "Description Epic 1");
@@ -32,24 +35,19 @@ public class Main {
                 LocalDateTime.of(1999, 6, 1, 0, 0, 0, 0));
 
         subtask1.setStatus(Status.DONE);
+        manager.createTask(task1);
         fb.createTask(task1);
         fb.createTask(task2);
         fb.createEpic(epic1);
+        fb.createEpic(epic2);
         fb.createSubtask(subtask1);
         fb.createSubtask(subtask2);
+        fb.createSubtask(subtask3);
+        fb.getTaskById(6);
 
-        System.out.println(fb.getTaskList());
-        System.out.println(fb.getSubtaskList());
-        System.out.println(fb.getEpicList());
-
-        fb.getTaskById(6);
-        fb.getTaskById(6);
-        fb.getTaskById(7);
-        fb.getTaskById(7);
-        fb.getTaskById(7);
-        fb.getTaskById(6);
-        fb.getEpicById(1);
-        fb.getTaskById(6);
-        fb.getSubtaskById(3);
+        FileBackedTasksManager fb2 = new FileBackedTasksManager(new File("resources/test.csv"));
+        fb2.createSubtask(subtask1);
+        fb2.createTask(task1);
+        fb2.createTask(task2);
     }
 }

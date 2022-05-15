@@ -16,11 +16,10 @@ import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     static int id = 0;
-
-    final HistoryManager historyInMemory = Managers.getDefaultHistory();
     final HashMap<Integer, Task> taskList = new HashMap<>();
     final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     final HashMap<Integer, Epic> epicList = new HashMap<>();
+    HistoryManager historyInMemory = Managers.getDefaultHistory();
 
     //Метод для присваивания уникального id классу Task и его наследников
     public static int assignId() {
@@ -249,43 +248,36 @@ public class InMemoryTaskManager implements TaskManager {
                 if (subtask.getEpicId() == id) {
                     itr.remove();
                 }
-
             }
         } else {
             System.out.println("Эпика с таким id не существует. Эпик не удален");
         }
     }
 
-    public Set<Task> getPrioritizedTasks() {
-        Comparator<Task> comparator = (o1, o2) -> {
-            if (o1.getStartTime().isBefore(o2.getStartTime())) {
-                return -1;
-            } else if (o1.getStartTime().isAfter(o2.getStartTime())) {
-                return 1;
-            } else {
-                return 0;
-            }
-        };
+    private Set<Task> getPrioritizedTasks() {
+        Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,
+                Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId);
         Set<Task> taskSet = new TreeSet<>(comparator);
         taskSet.addAll(taskList.values());
         taskSet.addAll(subtaskList.values());
         return taskSet;
     }
 
+    @Override
     public boolean isTaskNotCrossed(Task task) {
         Set<Task> taskSet = getPrioritizedTasks();
         taskSet.add(task);
         List<Task> list = new ArrayList<>(taskSet);
-        boolean b = true;
+        boolean isTaskNotCrossed = true;
         if (list.size() > 0) {
             for (int i = 0; i < list.size() - 1; i++) {
                 if (list.get(i).getEndTime().isAfter(list.get(i + 1).getStartTime())) {
-                    b = false;
+                    isTaskNotCrossed = false;
                 }
             }
         } else {
             return true;
         }
-        return b;
+        return isTaskNotCrossed;
     }
 }

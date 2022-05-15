@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node<Task>> historyMap = new HashMap<>();
@@ -18,6 +21,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             remove(task.getId());
         }
         linkLast(task);
+        historyMap.put(task.getId(), last);
     }
 
     @Override
@@ -35,22 +39,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     //Метод добавляет элемент в конец "списка" (создает ее Node)
     private void linkLast(Task task) {
-        Node<Task> lastNode = last;
-        Node<Task> newNode = new Node<>(lastNode, task, null);
-        historyMap.put(task.getId(), newNode);
-        last = newNode;
-        if (lastNode == null) {
+        Node newNode = new Node(last, task, null);
+        if (isNull(first)) {
             first = newNode;
         } else {
-            lastNode.setNext(newNode);
+            last.setNext(newNode);
         }
+        last = newNode;
     }
 
     //Метод собирает все задачи в ArrayList и возвращает его
     private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
-        for (Node<Task> node = first; node != null; node = node.getNext()) {
-            tasks.add(node.getItem());
+        Node<Task> current = first;
+        while (Objects.nonNull(current)) {
+            tasks.add(current.getItem());
+            current = current.getNext();
         }
         return tasks;
     }
@@ -60,18 +64,18 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node<Task> next = node.getNext();
         Node<Task> prev = node.getPrev();
 
-        if (prev == null) {
-            first = next;
-        } else {
+        if (node.hasPrev()) {
             prev.setNext(next);
             node.setPrev(null);
+        } else {
+            first = next;
         }
 
-        if (next == null) {
-            last = prev;
-        } else {
+        if (node.hasNext()) {
             next.setPrev(prev);
             node.setNext(null);
+        } else {
+            last = prev;
         }
 
         node.setItem(null);

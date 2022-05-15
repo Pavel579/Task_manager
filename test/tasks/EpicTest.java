@@ -1,20 +1,17 @@
-package test.tasks;
+package tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Status;
 
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
+    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     private Subtask subtask1;
     private Subtask subtask2;
     private Epic epic;
-    private final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
 
     @BeforeEach
     void beforeEach() {

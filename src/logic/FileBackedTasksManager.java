@@ -32,7 +32,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fbm = new FileBackedTasksManager(file);
         try {
-            List<String> line = new ArrayList<>(Files.readAllLines(Paths.get(file.getName())));
+            List<String> line = new ArrayList<>(Files.readAllLines(Paths.get(String.valueOf(file))));
             for (int i = 1; i < line.size(); i++) {
                 if (line.get(i).equals("")) {
                     if (i != line.size() - 1) {
@@ -102,7 +102,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         tasks.addAll(subtaskList.values());
         tasks.addAll(epicList.values());
 
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file.getName()))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file))) {
             fileWriter.write("id,type,name,status,description,epic,duration,startTime\n");
             for (Task task : tasks) {
                 fileWriter.write(toString(task));
