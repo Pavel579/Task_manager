@@ -29,7 +29,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.file = file;
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) {
+    static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fbm = new FileBackedTasksManager(file);
         try {
             List<String> line = new ArrayList<>(Files.readAllLines(Paths.get(String.valueOf(file))));

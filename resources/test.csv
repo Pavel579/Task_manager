@@ -1,6 +1,9 @@
 id,type,name,status,description,epic,duration,startTime
-1,TASK,name,NEW,Task description,,PT120H,2021-05-01T00:00
-2,EPIC,name,NEW,Epic description,,PT120H,1999-01-01T00:00
-3,SUBTASK,name,NEW,Subtask description,2,PT120H,1999-01-01T00:00
+1,EPIC,Epic 1,NEW,Description Epic 1,,PT864H,1999-01-01T00:00
+2,EPIC,Epic 2,NEW,Description Epic 2,,null,null
+3,SUBTASK,Sub1,NEW,Description1,1,PT120H,1999-01-01T00:00
+4,SUBTASK,Sub2,NEW,Description2,1,PT120H,1999-02-01T00:00
+6,TASK,Task 1,NEW,Description Task 1,,PT120H,0199-05-01T00:00
+7,TASK,Task 2,NEW,Description Task 2,,PT120H,1999-06-01T00:00
 
-1,2
+7,3,1,6

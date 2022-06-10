@@ -26,6 +26,7 @@ public class InMemoryTaskManager implements TaskManager {
         return ++id;
     }
 
+    @Override
     public HistoryManager getHistoryInMemory() {
         return historyInMemory;
     }
@@ -48,7 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
     //Метод создает задачу Task
     @Override
     public void createTask(Task task) {
-        if (task != null && task.getId() > 0 && !taskList.containsKey(task.getId()) && isTaskNotCrossed(task)) {
+        if (task != null && task.getId() > 0 && !taskList.containsKey(task.getId()) /*&& isTaskNotCrossed(task)*/) {
             taskList.put(task.getId(), task);
         } else {
             System.out.println("Задача не существует.");
@@ -254,13 +255,27 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private Set<Task> getPrioritizedTasks() {
+    @Override
+    public Set<Task> getPrioritizedTasks() {
         Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,
                 Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId);
         Set<Task> taskSet = new TreeSet<>(comparator);
         taskSet.addAll(taskList.values());
         taskSet.addAll(subtaskList.values());
         return taskSet;
+    }
+
+    @Override
+    public List<Task> getEpicSubtasks(int id) {
+        List<Task> subtaskListInEpic = new ArrayList<>();
+        Epic epic;
+        if (epicList.get(id) != null) {
+            epic = epicList.get(id);
+            for (Integer subtaskId : epic.getSubtaskIdInEpic()) {
+                subtaskListInEpic.add(subtaskList.get(subtaskId));
+            }
+        }
+        return subtaskListInEpic;
     }
 
     @Override

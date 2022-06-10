@@ -5,6 +5,8 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     //Метод возвращает список задач Task
@@ -63,4 +65,13 @@ public interface TaskManager {
 
     //Метод проверяет пересечение задач по времени
     boolean isTaskNotCrossed(Task task);
+
+    //Метод возвращает задачи в порядке приоритета
+    Set<Task> getPrioritizedTasks();
+
+    //Метод возвращает список подзадач в Эпике
+    List<Task> getEpicSubtasks(int id);
+
+    //Метод возвращает объект Менеджера Истории
+    HistoryManager getHistoryInMemory();
 }

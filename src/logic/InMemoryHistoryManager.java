@@ -39,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     //Метод добавляет элемент в конец "списка" (создает ее Node)
     private void linkLast(Task task) {
-        Node newNode = new Node(last, task, null);
+        Node<Task> newNode = new Node<>(last, task, null);
         if (isNull(first)) {
             first = newNode;
         } else {
