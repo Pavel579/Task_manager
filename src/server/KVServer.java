@@ -1,14 +1,14 @@
 package server;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
@@ -44,10 +44,10 @@ public class KVServer {
                     return;
                 }
                 String value = data.get(key);
-                if (value != null){
+                if (value != null) {
                     sendText(h, data.get(key));
                     h.sendResponseHeaders(200, 0);
-                }else {
+                } else {
                     System.out.println("Данные не найдены");
                     h.sendResponseHeaders(404, 0);
                 }
@@ -115,7 +115,7 @@ public class KVServer {
         server.start();
     }
 
-    public void stop(){
+    public void stop() {
         server.stop(2);
     }
 

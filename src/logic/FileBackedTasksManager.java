@@ -97,7 +97,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return task;
     }
 
-    private void save() {
+    protected void save() {
         tasks.addAll(taskList.values());
         tasks.addAll(subtaskList.values());
         tasks.addAll(epicList.values());

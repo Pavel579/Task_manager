@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static logic.HTTPTaskManager.load;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HTTPTaskManagerTest extends TaskManagerTest {
@@ -25,7 +24,7 @@ public class HTTPTaskManagerTest extends TaskManagerTest {
 
     @Override
     public void createManager() throws IOException, InterruptedException {
-        httpTaskManager = new HTTPTaskManager("http://localhost:8078");
+        httpTaskManager = new HTTPTaskManager("http://localhost:8078", false);
     }
 
     @BeforeEach
@@ -53,7 +52,7 @@ public class HTTPTaskManagerTest extends TaskManagerTest {
         httpTaskManager.getSubtaskById(3);
         httpTaskManager.getEpicById(2);
 
-        HTTPTaskManager taskManagerFromServer = load();
+        HTTPTaskManager taskManagerFromServer = new HTTPTaskManager("http://localhost:8078", true);
         List<Task> historyList = new ArrayList<>(taskManagerFromServer.getHistoryInMemory().getHistory());
         List<Task> tasksList = new ArrayList<>();
         tasksList.add(taskManagerFromServer.getTaskList().get(0));

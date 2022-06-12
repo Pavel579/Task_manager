@@ -10,13 +10,12 @@ import java.io.IOException;
 
 public class Managers {
     private static final HistoryManager historyManager = new InMemoryHistoryManager();
-    ;
     private static final TaskManager manager = new InMemoryTaskManager();
     private static TaskManager httpManager = null;
 
     static {
         try {
-            httpManager = new HTTPTaskManager("http://localhost:8078");
+            httpManager = new HTTPTaskManager("http://localhost:8078", false);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,23 +1,26 @@
+import logic.FileBackedTasksManager;
 import logic.HTTPTaskManager;
+import logic.TaskManager;
 import server.HttpTaskServer;
 import server.KVServer;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import utils.Managers;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static logic.HTTPTaskManager.load;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         System.out.println("Пришло время практики!");
         new KVServer().start();
         HttpTaskServer.createServer();
 
-        HTTPTaskManager fb = new HTTPTaskManager("http://localhost:8078");
+        TaskManager fb = Managers.getHttpManager();
         Epic epic1 = new Epic(1, "Epic 1", "Description Epic 1");
         Epic epic2 = new Epic(2, "Epic 2", "Description Epic 2");
         Subtask subtask1 = new Subtask(3, "Sub1", "Description1", 1, Duration.ofDays(5),
@@ -39,12 +42,5 @@ public class Main {
         fb.getSubtaskById(3);
         fb.getEpicById(1);
         fb.getTaskById(6);
-
-        HTTPTaskManager result = load();
-        System.out.println("fn" + result.getTaskList());
-        System.out.println("fn" + result.getSubtaskList());
-
-        System.out.println("fn" + result.getTaskList());
-        System.out.println("hist" + result.getHistoryInMemory().getHistory());
     }
 }
